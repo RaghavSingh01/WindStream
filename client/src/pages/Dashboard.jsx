@@ -34,7 +34,7 @@ const TaskTable = ({ tasks }) => {
     </thead>
   );
 
-  const TableRow = ({ task }) => (
+  const TableRow = ({ task , user}) => (
     <tr className='border-b border-gray-300 text-gray-600 hover:bg-gray-300/10'>
       <td className='py-2'>
         <div className='flex items-center gap-2'>
@@ -99,7 +99,7 @@ const UserTable = ({ users }) => {
       <tr className='text-black  text-left'>
         <th className='py-2'>Full Name</th>
         <th className='py-2'>Status</th>
-        <th className='py-2'>Created At</th>
+        {/* <th className='py-2'>Created At</th> */}
       </tr>
     </thead>
   );
@@ -129,7 +129,7 @@ const UserTable = ({ users }) => {
           {user?.isActive ? "Active" : "Disabled"}
         </p>
       </td>
-      <td className='py-2 text-sm'>{moment(user?.createdAt).fromNow()}</td>
+      {/* <td className='py-2 text-sm'>{moment(user?.createdAt).fromNow()}</td> */}
     </tr>
   );
 
@@ -194,7 +194,7 @@ const Dashboard = () => {
         <div className='h-full flex flex-1 flex-col justify-between'>
           <p className='text-base text-gray-600'>{label}</p>
           <span className='text-2xl font-semibold'>{count}</span>
-          <span className='text-sm text-gray-400'>{"110 last month"}</span>
+          {/* <span className='text-sm text-gray-400'>{new.Date().getTime()}</span> */}
         </div>
 
         <div

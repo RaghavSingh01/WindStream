@@ -16,7 +16,7 @@ import {
 } from "../../redux/slices/api/taskApiSlice";
 import { toast } from "sonner";
 
-const TaskDialog = ({ task }) => {
+const TaskDialog = ({ task, user }) => {
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
@@ -42,14 +42,14 @@ const TaskDialog = ({ task }) => {
   const deleteClicks = () => {
     setOpenDialog(true);
   };
-// console.log(task._id);
+
   const deleteHandler = async () => {
     try {
       const res = await deleteTask({
         id: task._id,
         isTrashed: "trash",
       }).unwrap();
-      
+
       toast.success(res?.message);
       setTimeout(() => {
         setOpenDialog(false);
@@ -61,7 +61,8 @@ const TaskDialog = ({ task }) => {
     }
   };
 
-  const items = [
+  // Define menu items based on user role
+  const adminItems = [
     {
       label: "Open Task",
       icon: <AiTwotoneFolderOpen className="mr-2 h-5 w-5" aria-hidden="true" />,
@@ -83,6 +84,22 @@ const TaskDialog = ({ task }) => {
       onClick: () => duplicateHandler(),
     },
   ];
+
+  const userItems = [
+    {
+      label: "Open Task",
+      icon: <AiTwotoneFolderOpen className="mr-2 h-5 w-5" aria-hidden="true" />,
+      onClick: () => navigate(`/task/${task._id}`),
+    },
+    {
+      label: "Edit",
+      icon: <MdOutlineEdit className="mr-2 h-5 w-5" aria-hidden="true" />,
+      onClick: () => setOpenEdit(true),
+    },
+  ];
+
+  
+  const items = user.isAdmin ? adminItems : userItems;
 
   return (
     <>
@@ -122,26 +139,28 @@ const TaskDialog = ({ task }) => {
                 ))}
               </div>
 
-              <div className="px-1 py-1">
-                <Menu.Item>
-                  {({ active }) => (
-                    <button
-                      onClick={() => deleteClicks()}
-                      className={`${
-                        active
-                          ? "bg-blue-500 text-white"
-                          : "text-red-900"
-                      } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                    >
-                      <RiDeleteBin6Line
-                        className="mr-2 h-5 w-5 text-red-400"
-                        aria-hidden="true"
-                      />
-                      Delete
-                    </button>
-                  )}
-                </Menu.Item>
-              </div>
+              {user.isAdmin && (
+                <div className="px-1 py-1">
+                  <Menu.Item>
+                    {({ active }) => (
+                      <button
+                        onClick={() => deleteClicks()}
+                        className={`${
+                          active
+                            ? "bg-blue-500 text-white"
+                            : "text-red-900"
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                      >
+                        <RiDeleteBin6Line
+                          className="mr-2 h-5 w-5 text-red-400"
+                          aria-hidden="true"
+                        />
+                        Delete
+                      </button>
+                    )}
+                  </Menu.Item>
+                </div>
+              )}
             </Menu.Items>
           </Transition>
         </Menu>
@@ -169,6 +188,9 @@ const TaskDialog = ({ task }) => {
 TaskDialog.propTypes = {
   task: PropTypes.shape({
     _id: PropTypes.string.isRequired,
+  }).isRequired,
+  user: PropTypes.shape({
+    isAdmin: PropTypes.bool.isRequired,
   }).isRequired,
 };
 
