@@ -156,7 +156,7 @@ const Dashboard = () => {
       </div>
     );
   }
-  const totals = data?.tasks;
+  const totals = data?.tasks || {};
   const stats = [
     {
       _id: "1",
