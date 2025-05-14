@@ -1,18 +1,18 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Button from '../Components/Button';
 import Textbox from '../Components/Textbox';
 import { useLoginMutation } from '../redux/slices/api/authApiSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setCredentials } from '../redux/slices/authSlice';
 import Loading from '../components/Loader';
 
 
 
 const Login = () => {
-    const user = "";
+    const { user } = useSelector((state) => state.auth);
     const { register,
         handleSubmit,
         formState: { errors }, } = useForm();
@@ -33,10 +33,11 @@ const Login = () => {
 
         }
 
-    };
-    useEffect(() => {
-        user && navigate("/Dashboard")
-    }, [ user]);
+    };    useEffect(() => {
+        if (user) {
+            navigate("/Dashboard");
+        }
+    }, [user, navigate]);
     return (
         <div className='w-full min-h-screen flex items-center justify-center flex-col lg:flex-row bg-[#f3f4f6]'>
             <div className='w-full md:w-auto flex gap-0 md:gap-40 flex-col md:flex-row items-center justify-center '>
