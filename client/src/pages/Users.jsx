@@ -154,7 +154,7 @@ const Users = () => {
             <table className='w-full mb-5'>
               <TableHeader />
               <tbody>
-                {data?.map((user, index) => (
+                {(data || []).map((user, index) => (
                   <TableRow key={index} user={user} />
                 ))}
               </tbody>
