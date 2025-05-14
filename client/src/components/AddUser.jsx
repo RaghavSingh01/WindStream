@@ -36,9 +36,13 @@ const AddUser = ({ open, setOpen, userData, refetch }) => {
           dispatch(setCredentials({...result.user})); 
         }
       } else {
-        const result = await addNewUser({ ...data, password: data.email }).unwrap();
+        const result = await addNewUser({ 
+          ...data, 
+          password: data.email,
+          isAdmin: false // Set isAdmin flag explicitly
+        }).unwrap();
 
-        toast.success("New User added succesfully.");
+        toast.success("New User added successfully");
         if (refetch) refetch();
       }
 

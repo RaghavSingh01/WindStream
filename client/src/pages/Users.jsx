@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import Title from "../components/Title";
 import Button from "../components/Button";
 import { IoMdAdd } from "react-icons/io";
-import { summary } from "../assets/data";
 import { getInitials } from "../utils";
 import clsx from "clsx";
 import ConfirmatioDialog, { UserAction } from "../components/Dialogs";
 import AddUser from "../components/AddUser";
 import { useDeleteUserMutation, useGetTeamListQuery, useUserActionMutation } from "../redux/slices/api/userApiSlice";
 import { toast } from "sonner";
+import Loading from "../components/Loader";
 
 const Users = () => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -16,12 +16,11 @@ const Users = () => {
   const [openAction, setOpenAction] = useState(false);
   const [selected, setSelected] = useState(null);
 
-  const { data, isLoading, refetch} = useGetTeamListQuery();
-
-  console.log(data);
-
+  const { data, isLoading, error, refetch } = useGetTeamListQuery();
   const [deleteUser] = useDeleteUserMutation();
   const [userAction] = useUserActionMutation();
+
+  console.log('Team list query state:', { data, isLoading, error });
 
   const userActionHandler = async () => {
     try {
@@ -31,36 +30,57 @@ const Users = () => {
       });
 
       refetch();
-                                            //When we use selected in userAction we uuse the full object    
       toast.success(result.data.message);
       setSelected(null);
       setTimeout(() => {
         setOpenAction(false);
       }, 500);
-
-    } catch (error) {
-      console.log(err);
+    } catch (err) {
+      console.error(err);
       toast.error(err?.data?.message || err.error);
     }
   };
 
-
   const deleteHandler = async() => {
     try {
-      const result = await deleteUser(selected);//When we use selected here we only pass id and not the whole object.
-    
+      const result = await deleteUser(selected);
       refetch();
       toast.success(result.data.message);
       setSelected(null);
       setTimeout(() => {
         setOpenDialog(false);
       }, 500);
-    } catch (error) {
-      console.log(err);
-      toast.error(err?.data?.message || err.error);  
+    } catch (err) {
+      console.error(err);
+      toast.error(err?.data?.message || err.error);
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="py-10">
+        <Loading />
+      </div>
+    );
+  }
+
+  if (error) {
+    console.error('Error fetching team list:', error);
+    return (
+      <div className="py-10 text-center text-red-500">
+        Error loading team members. {error.status === 403 ? "Please make sure you are logged in as an admin." : error.data?.message || "Please try again."}
+      </div>
+    );
+  }
+
+  if (!data || !Array.isArray(data)) {
+    console.log('Invalid or empty data received:', data);
+    return (
+      <div className="py-10 text-center text-gray-500">
+        No team members found.
+      </div>
+    );
+  }
 
   const userStatusClick = (el) => {
     setSelected(el);
