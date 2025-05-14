@@ -16,9 +16,9 @@ const Users = () => {
   const [openAction, setOpenAction] = useState(false);
   const [selected, setSelected] = useState(null);
 
-  const { data, isLoading, error, refetch} = useGetTeamListQuery();
+  const { data, isLoading, refetch} = useGetTeamListQuery();
 
-  console.log({ data, isLoading, error });
+  console.log(data);
 
   const [deleteUser] = useDeleteUserMutation();
   const [userAction] = useUserActionMutation();
@@ -154,7 +154,7 @@ const Users = () => {
             <table className='w-full mb-5'>
               <TableHeader />
               <tbody>
-                {(data || []).map((user, index) => (
+                {data?.map((user, index) => (
                   <TableRow key={index} user={user} />
                 ))}
               </tbody>
