@@ -23,11 +23,8 @@ export const registerUser = async (req, res) => {
       isAdmin,
       role,
       title,
-    });
-
-    if (user) {
-      isAdmin ? createJWT(res, user._id) : null;
-
+    });    if (user) {
+      await createJWT(res, user._id);
       user.password = undefined;
 
       res.status(201).json(user);
@@ -59,12 +56,10 @@ export const loginUser = async (req, res) => {
         status: false,
         message: "User account has been deactivated, contact the administrator",
       });
-    }
-
-    const isMatch = await user.matchPassword(password);
+    }    const isMatch = await user.matchPassword(password);
 
     if (user && isMatch) {
-      createJWT(res, user._id);
+      await createJWT(res, user._id);
 
       user.password = undefined;
 
