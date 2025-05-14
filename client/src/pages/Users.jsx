@@ -136,13 +136,6 @@ const Users = () => {
     </tr>
   );
 
-  if (isLoading) {
-    return <div className="py-10">Loading...</div>;
-  }
-  if (!data || !Array.isArray(data) || data.length === 0) {
-    return <div className="py-10 text-center text-gray-500">No team members found.</div>;
-  }
-
   return (
     <>
       <div className='w-full md:px-1 px-0 mb-6'>
