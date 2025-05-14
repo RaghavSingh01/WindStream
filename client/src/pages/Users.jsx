@@ -168,6 +168,7 @@ const Users = () => {
         setOpen={setOpen}
         userData={selected}
         key={new Date().getTime().toString()}
+        refetch={refetch}
       />
 
       <ConfirmatioDialog

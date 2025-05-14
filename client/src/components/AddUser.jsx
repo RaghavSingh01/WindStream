@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { useUpdateUserMutation } from "../redux/slices/api/userApiSlice";
 import { setCredentials } from "../redux/slices/authSlice";
 
-const AddUser = ({ open, setOpen, userData }) => {
+const AddUser = ({ open, setOpen, userData, refetch }) => {
   let defaultValues = userData ?? {};
   const { user } = useSelector((state) => state.auth);
 
@@ -39,6 +39,7 @@ const AddUser = ({ open, setOpen, userData }) => {
         const result = await addNewUser({ ...data, password: data.email }).unwrap();
 
         toast.success("New User added succesfully.");
+        if (refetch) refetch();
       }
 
       setTimeout(() => {
