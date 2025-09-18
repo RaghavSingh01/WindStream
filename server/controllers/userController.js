@@ -40,10 +40,9 @@ export const registerUser = async (req, res) => {
 };
 
 export const loginUser = async (req, res) => {
-  try {
-    const { email, password } = req.body;
+  try {    const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select('name email password isAdmin isActive role title');
 
     if (!user) {
       return res
@@ -91,7 +90,14 @@ export const logoutUser = async (req, res) => {
 
 export const getTeamList = async (req, res) => {
   try {
-    const users = await User.find().select("name title role email isActive");
+    if (!req.user || !req.user.isAdmin) {
+      return res.status(403).json({
+        status: false,
+        message: "Not authorized. Admin access required.",
+      });
+    }
+
+    const users = await User.find().select("name title role email isActive isAdmin");
 
     res.status(200).json(users);
   } catch (error) {

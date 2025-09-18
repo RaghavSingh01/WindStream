@@ -23,11 +23,11 @@ export const createJWT = async (res, userId) => {
     process.env.JWT_SECRET,
     { expiresIn: "1d" }
   );
-
-  res.cookie("token", token, {
+  res.cookie("token", token, { 
     httpOnly: true, 
-    secure: process.env.NODE_ENV !== "development", 
-    sameSite: "strict", //prevents CSRF attacks
-    maxAge: 1 * 24 * 60 * 60 * 1000,   // 1 day 
+    secure: false, // Set to false for development
+    sameSite: "lax", // Changed to lax for development
+    maxAge: 1 * 24 * 60 * 60 * 1000,   // 1 day
+    path: '/' // Ensure cookie is available for all paths
   });
 }
